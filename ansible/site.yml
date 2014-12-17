@@ -1,0 +1,19 @@
+- name: Couchbase Installation
+  hosts: all
+  sudo: yes
+  tasks:
+  - name: Download Couchbase Server
+    get_url: url={{ package.url }} dest=/tmp/{{ package.file }}
+  - name: Install Couchbase Server
+    command: dpkg -i /tmp/{{ package.file }}
+  - name: Clean up
+    file: path=/tmp/{{ package.file }} state=absent
+
+- name: Couchbase Initialization
+  hosts: all
+  sudo: yes
+  tasks:
+  - name: Wait for Couchbase Server to be alive
+    wait_for: port=8091 delay=5
+  - name: Configure main node
+    shell: /opt/couchbase/bin/couchbase-cli cluster-init -c {{ ansible_lo.ipv4.address }}:8091 --cluster-init-username={{couchbase.admin_user}} --cluster-init-password={{couchbase.admin_password}} --cluster-init-port=8091 --cluster-init-ramsize={{couchbase.cluster_ram_quota}} -u {{couchbase.admin_user}} -p {{couchbase.admin_password}}

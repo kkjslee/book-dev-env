@@ -3,4 +3,4 @@
   sudo: yes
   roles:
     - couchbase
-	- redis
+    - redis

@@ -2,6 +2,6 @@
   hosts: all
   sudo: yes
   roles:
-    - couchbase
-    - redis
+#    - couchbase
+#    - redis
     - mysql

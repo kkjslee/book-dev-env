@@ -4,3 +4,4 @@
   roles:
     - couchbase
     - redis
+    - mysql

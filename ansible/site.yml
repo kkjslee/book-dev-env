@@ -1,47 +1,6 @@
-- name: Couchbase Installation
+- name: 
   hosts: all
   sudo: yes
-  tasks:
-  - name: Download Couchbase Server
-    get_url: url={{ couchbase.package.url }} dest=/tmp/{{ couchbase.package.file }}
-
-  - name: Install Couchbase Server
-    command: dpkg -i /tmp/{{ couchbase.package.file }}
-
-  - name: Clean up
-    file: path=/tmp/{{ couchbase.package.file }} state=absent
-
-- name: Couchbase Initialization
-  hosts: all
-  sudo: yes
-  tasks:
-  - name: Wait for Couchbase Server to be alive
-    wait_for: port=8091 delay=5
-
-  - name: Configure main node
-    shell: /opt/couchbase/bin/couchbase-cli cluster-init -c {{ couchbase.bind }}:8091 --cluster-init-username={{couchbase.admin_user}} --cluster-init-password={{couchbase.admin_password}} --cluster-init-port=8091 --cluster-init-ramsize={{couchbase.cluster_ram_quota}} -u {{couchbase.admin_user}} -p {{couchbase.admin_password}}
-
-- name: Redis Initialization
-  hosts: all
-  sudo: yes
-  tasks:
-  - name: Add repository from PPA and install its signing key
-    apt_repository:
-      repo: ppa:chris-lea/redis-server
-      update_cache: yes
-
-  - name: Install Redis Server
-    apt:
-      name: redis-server
-      state: latest
-
-  - name: Update configuration file
-    hosts: all
-    sudo: yes
-    template:
-      src: redis.conf.j2
-      dest: /etc/redis/redis.conf
-      owner: root
-      group: root
-      mode: 0644
-    notify: restart redis
+  roles:
+    - couchbase
+	- redis

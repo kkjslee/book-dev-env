@@ -10,4 +10,4 @@
 #  - restart mysql
 
 - name: Update MySQL root password for all root accounts
-  mysql_user: name=root password={{ mysql.admin_password }} priv=*.*:ALL,GRANT
+  mysql_user: host="%" name=root password={{ mysql.admin_password }} priv=*.*:ALL,GRANT
